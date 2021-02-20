@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>公共服务</title>
+</head>
+<body>
+  <h3>生成PDF服务</h3>
+  <form name="pdf">
+    <textarea name="content" id="" cols="60" rows="10">
+      <h1 style="font-size: 36px;">测试专用</h1>
+      <p style="color: red;">hello world!</p>
+    </textarea>
+    <button>生成pdf</button>
+  </form>
+  
+  <script>
+    document.forms.namedItem('pdf').onsubmit = function(e){
+
+      const data = new FormData(e.target)
+      const content = data.get('content')
+
+      fetch('/pdf/create', {
+        method: 'post',
+        body: content,
+        responseType: 'blob'
+      })
+      .then(res => res.blob())
+      .then(blob => {   
+        let bl = new Blob([blob]);
+        var link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = '测试专用.pdf';
+        link.click();
+        window.URL.revokeObjectURL(link.href);
+      })
+
+      e.preventDefault()
+    }
+  </script>
+</body>
+</html>
