@@ -4,9 +4,34 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>test</title>
 </head>
 <body>
-  <h1>test</h1>
+  <button>发送二进制数据</button>
+  <script>
+
+    const $btn = document.querySelector('button')
+    const content = new Array(10000).fill('').map((d, i) => `<p>hello ${i}</p>`)
+    $btn.onclick = function() {
+
+      const blob = new Blob(content, {type: 'text/plain'})
+      const formData = new FormData();
+      formData.append('content', blob)
+      formData.append('test', 123)
+
+      fetch('/api/test', {
+        method: 'POST',
+        //body: new Blob(content, {type: 'text/plain'}) 
+        body: formData
+      })
+      .then(res => {
+        return res.json()
+      })
+      .then(res => {
+        console.log(res)
+      })
+
+    }
+  </script>
 </body>
 </html>

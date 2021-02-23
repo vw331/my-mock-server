@@ -19,12 +19,15 @@
   <script>
     document.forms.namedItem('pdf').onsubmit = function(e){
 
-      const data = new FormData(e.target)
-      const content = data.get('content')
-
+      const content = new FormData(e.target).get('content')
+      console.log(content)
+      const blob = new Blob([content], {type: 'text/plain'})
+      const formData = new FormData();
+      formData.append('content', blob) 
+ 
       fetch('/pdf/create', {
         method: 'post',
-        body: content,
+        body: formData,
         responseType: 'blob'
       })
       .then(res => res.blob())
@@ -35,7 +38,7 @@
         link.download = '测试专用.pdf';
         link.click();
         window.URL.revokeObjectURL(link.href);
-      })
+      }) 
 
       e.preventDefault()
     }

@@ -1,5 +1,9 @@
 const router = require('express').Router()
 const wkhtmltopdf = require('wkhtmltopdf');
+const multer = require('multer');
+const upload = multer();
+const StringDecoder = require('string_decoder').StringDecoder;
+const decoder = new StringDecoder('utf8');
 const fs = require('fs')
 /**
  * https://github.com/devongovett/node-wkhtmltopdf
@@ -21,11 +25,13 @@ router.get('/create', (req, res, next) => {
 
 })
 
-router.post('/create', (req, res, next) => {
-  if(!req.body) {
+router.post('/create', upload.any(),  (req, res, next) => {
+  if(!req.files.length) {
     throw new Error('请提交内容')
   }
-  wkhtmltopdf(req.body, { 
+  const str = decoder.write(req.files[0].buffer);
+  res.type('pdf')
+  wkhtmltopdf(str, { 
     pageSize: 'letter',
     encoding: 'utf-8'
   })

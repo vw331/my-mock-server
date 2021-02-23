@@ -8,6 +8,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/test', (req, res, next) => {
+  res.type('html');
   res.render('test')
 })
 
